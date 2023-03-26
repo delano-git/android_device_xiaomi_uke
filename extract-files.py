@@ -36,6 +36,12 @@ lib_fixups: lib_fixups_user_type = {
 
 blob_fixups: blob_fixups_user_type = {
     (
+        'odm/etc/camera/enhance_motiontuning.xml',
+        'odm/etc/camera/motiontuning.xml',
+        'odm/etc/camera/night_motiontuning.xml'
+    ): blob_fixup()
+        .regex_replace('xml=version', 'xml version'),
+    (
         'odm/lib64/libAncHumanVideoBokehV4.so',
         'odm/lib64/libanc_single_rt_bokeh.so',
     ): blob_fixup()
