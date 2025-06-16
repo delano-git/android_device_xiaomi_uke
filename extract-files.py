@@ -81,6 +81,8 @@ blob_fixups: blob_fixups_user_type = {
         'vendor/lib64/hw/com.qti.chi.override.so',
     ): blob_fixup()
         .replace_needed('android.hardware.graphics.allocator-V1-ndk.so', 'android.hardware.graphics.allocator-V2-ndk.so'),
+    'vendor/lib64/libar-pal.so': blob_fixup()
+        .replace_needed('libaudioroute.so', 'libaudioroute-v34.so'),
 }
 
 module = ExtractUtilsModule(
