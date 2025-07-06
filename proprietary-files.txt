@@ -23,10 +23,10 @@ odm/etc/audio/tl-spk.wav
 odm/etc/audio/tl-spk_hp.wav
 odm/etc/audio/tr-spk.wav
 odm/etc/audio/tr-spk_hp.wav
-odm/lib64/libawcal.so;DISABLE_CHECKELF
-odm/lib64/libfsalgocal.so;DISABLE_CHECKELF
-vendor/lib64/hw/audio.primary.pineapple.so;DISABLE_CHECKELF
-vendor/lib64/libar-pal.so;DISABLE_CHECKELF
+odm/lib64/libawcal.so
+odm/lib64/libfsalgocal.so
+vendor/lib64/hw/audio.primary.pineapple.so
+vendor/lib64/libar-pal.so
 
 # Audio configs
 odm/etc/audio/sku_cliffs/mixer_paths_overlay_static.xml
