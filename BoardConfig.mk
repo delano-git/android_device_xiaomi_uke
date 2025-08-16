@@ -7,6 +7,9 @@
 # Include the common OEM chipset BoardConfig.
 include device/xiaomi/sm8635-common/BoardConfigCommon.mk
 
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := muyu
+
 # DTB / DTBO
 BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs/
 BOARD_PREBUILT_DTBOIMAGE := $(KERNEL_PATH)/dtbo.img
