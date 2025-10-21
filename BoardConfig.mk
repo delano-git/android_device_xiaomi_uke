@@ -8,7 +8,7 @@
 include device/xiaomi/sm8635-common/BoardConfigCommon.mk
 
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := muyu
+TARGET_BOOTLOADER_BOARD_NAME := uke
 
 # DTB / DTBO
 BOARD_PREBUILT_DTBIMAGE_DIR := $(KERNEL_PATH)/dtbs/
@@ -40,4 +40,4 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/properties/system.prop
 TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
 
 # Inherit the proprietary files
-include vendor/xiaomi/muyu/BoardConfigVendor.mk
+include vendor/xiaomi/uke/BoardConfigVendor.mk

@@ -12,16 +12,16 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 $(call inherit-product, vendor/lineage/config/common_full_tablet_wifionly.mk)
 
 # Inherit from device makefile.
-$(call inherit-product, device/xiaomi/muyu/device.mk)
+$(call inherit-product, device/xiaomi/uke/device.mk)
 
-PRODUCT_DEVICE := muyu
+PRODUCT_DEVICE := uke
 PRODUCT_BRAND := Xiaomi
-PRODUCT_NAME := lineage_muyu
+PRODUCT_NAME := lineage_uke
 PRODUCT_MANUFACTURER := Xiaomi
-PRODUCT_MODEL := 24091RPADG
+PRODUCT_MODEL := 2410CRP4CG
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BuildDesc="missi-user 15 AQ3A.240801.002 OS2.0.200.0.VOYMIXM release-keys" \
-    BuildFingerprint=Xiaomi/muyu_global/muyu:14/UKQ1.240624.001/OS2.0.200.0.VOYMIXM:user/release-keys
+    BuildDesc="missi-user 15 AQ3A.240801.002 OS2.0.200.0.VOZMIXM release-keys" \
+    BuildFingerprint=Xiaomi/uke_global/uke:14/UKQ1.240624.001/OS2.0.200.0.VOZMIXM:user/release-keys

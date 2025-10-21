@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-DEVICE_PATH := device/xiaomi/muyu
+DEVICE_PATH := device/xiaomi/uke
 KERNEL_PATH := $(DEVICE_PATH)-kernel
 
 # Inherit from the common OEM chipset makefile.
@@ -12,11 +12,11 @@ $(call inherit-product, device/xiaomi/sm8635-common/common.mk)
 
 # Overlays
 PRODUCT_PACKAGES += \
-    FrameworksResMuyu
+    FrameworksResUke
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
 
 # Inherit the proprietary files
-$(call inherit-product, vendor/xiaomi/muyu/muyu-vendor.mk)
+$(call inherit-product, vendor/xiaomi/uke/uke-vendor.mk)
