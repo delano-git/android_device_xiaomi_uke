@@ -51,11 +51,11 @@ blob_fixups: blob_fixups_user_type = {
         .clear_symbol_version('AHardwareBuffer_release')
         .clear_symbol_version('AHardwareBuffer_unlock'),
     (
-        'odm/lib64/camera/com.qti.actuator.o81_qtech_s5kjn1sq03_gt9764_wide_i_actuator.so',
-        'odm/lib64/camera/com.qti.eeprom.o81_aac_ov32d40_p24c64e_front_i_eeprom.so',
-        'odm/lib64/camera/com.qti.eeprom.o81_qtech_s5kjn1sq03_gt24o128e_wide_i_eeprom.so',
-        'odm/lib64/camera/com.qti.sensor.o81_aac_ov32d40_front_i.so',
-        'odm/lib64/camera/com.qti.sensor.o81_qtech_s5kjn1sq03_wide_i.so',
+        'odm/lib64/camera/com.qti.actuator.o82_ofilm_ov13b10_cn3927v_wide_i_actuator.so',
+        'odm/lib64/camera/com.qti.eeprom.o82_aac_ov08d10_gt24p64e_front_i_eeprom.so',
+        'odm/lib64/camera/com.qti.eeprom.o82_ofilm_ov13b10_bl24sa64_wide_i_eeprom.so',
+        'odm/lib64/camera/com.qti.sensor.o82_aac_ov08d10_front_i.so',
+        'odm/lib64/camera/com.qti.sensor.o82_ofilm_ov13b10_wide_i.so',
         'odm/lib64/camera/components/com.jigan.node.videobokeh.so',
         'odm/lib64/camera/components/com.mi.node.aiasd.so',
         'odm/lib64/camera/components/com.mi.node.rearvideo.so',
@@ -99,7 +99,7 @@ blob_fixups: blob_fixups_user_type = {
 }
 
 module = ExtractUtilsModule(
-    'muyu',
+    'uke',
     'xiaomi',
     blob_fixups=blob_fixups,
     lib_fixups=lib_fixups,
