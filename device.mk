@@ -10,6 +10,10 @@ KERNEL_PATH := $(DEVICE_PATH)-kernel
 # Inherit from the common OEM chipset makefile.
 $(call inherit-product, device/xiaomi/sm8635-common/common.mk)
 
+# Overlays
+PRODUCT_PACKAGES += \
+    FrameworksResMuyu
+
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)
