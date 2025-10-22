@@ -23,5 +23,5 @@ PRODUCT_MODEL := 2410CRP4CG
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    BuildDesc="missi-user 15 AQ3A.240801.002 OS2.0.200.0.VOZMIXM release-keys" \
-    BuildFingerprint=Xiaomi/uke_global/uke:14/UKQ1.240624.001/OS2.0.200.0.VOZMIXM:user/release-keys
+    BuildDesc="missi-user 15 AQ3A.240801.002 OS2.0.201.0.VOZMIXM release-keys" \
+    BuildFingerprint=Xiaomi/uke_global/uke:14/UKQ1.240624.001/OS2.0.201.0.VOZMIXM:user/release-keys
