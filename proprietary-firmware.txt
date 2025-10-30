@@ -1,5 +1,5 @@
 ## All proprietary files from this list, unless pinned and noted otherwise,
-## are from Xiaomi Pad 7 (OS2.0.201.0.VOZMIXM).
+## are from Xiaomi Pad 7 (OS3.0.6.0.WOZCNXM).
 
 abl.img;AB
 aop.img;AB
