@@ -18,10 +18,28 @@ PRODUCT_DEVICE := uke
 PRODUCT_BRAND := Xiaomi
 PRODUCT_NAME := lineage_uke
 PRODUCT_MANUFACTURER := Xiaomi
-PRODUCT_MODEL := 2410CRP4CG
+PRODUCT_MODEL := 2410CRP4C
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BuildDesc="missi-user 16 BP2A.250605.031.A3 OS3.0.301.0.WOZMIXM release-keys" \
     BuildFingerprint=Xiaomi/uke_global/uke:16/BP2A.250605.031.A3/OS3.0.301.0.WOZMIXM:user/release-keys
+
+# Axion Device Configuration
+AXION_MAINTAINER := delano-git
+AXION_PROCESSOR := Snapdragon_7+Gen3
+
+# Camera Info
+AXION_CAMERA_REAR_INFO := 13
+AXION_CAMERA_FRONT_INFO := 8
+
+# Graphics & Display
+TARGET_ENABLE_BLUR := true
+TARGET_SUPPORTED_REFRESH_RATES := 60,90,120,144
+
+# Features & Performance
+BYPASS_CHARGE_SUPPORTED := true
+BYPASS_CHARGE_TOGGLE_PATH ?= /sys/class/xm_power/charger/smart_charge/smart_night
+PERF_GOV_SUPPORTED := true
+PERF_DEFAULT_GOV := walt
