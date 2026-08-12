@@ -39,6 +39,7 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/properties/system.prop
 
 # Workaround to make lineage's soong generator work
 TARGET_KERNEL_SOURCE := $(KERNEL_PATH)/kernel-headers
+WITH_DEXPREOPT_ART_BOOT_IMG_ONLY := true
 
 # Inherit the proprietary files
 include vendor/xiaomi/uke/BoardConfigVendor.mk
