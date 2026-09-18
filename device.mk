@@ -10,6 +10,10 @@ KERNEL_PATH := $(DEVICE_PATH)-kernel
 # Inherit from the common OEM chipset makefile.
 $(call inherit-product, device/xiaomi/sm8635-common/common.mk)
 
+# Kernel Manager
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/configs/ax_kernel_manager.xml:$(TARGET_COPY_OUT_VENDOR)/etc/ax_kernel_manager.xml
+
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworksResUke \
