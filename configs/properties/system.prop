@@ -6,3 +6,8 @@ ro.radio.noril=yes
 ro.carrier=wifi-only
 hw.nophone=true
 persist.radio.multisim.config=none
+
+# DPM (disable on Wi-Fi only tablet to avoid modem dormancy polling)
+persist.vendor.dpm.feature=0
+persist.vendor.dpm.vndr.feature=0
+persist.vendor.dpm.vndr.halservice.enable=0

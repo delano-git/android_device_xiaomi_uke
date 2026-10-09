@@ -5,4 +5,7 @@
     <bool name="config_isDesktopModeSupported">true</bool>
     <bool name="config_voice_capable">false</bool>
     <bool name="config_sms_capable">false</bool>
+
+    <!-- Doze: tablets should not wake up on table movement / pickup -->
+    <bool name="config_dozePulsePickup">false</bool>
 </resources>
