@@ -7,16 +7,8 @@
 DEVICE_PATH := device/xiaomi/uke
 KERNEL_PATH := $(DEVICE_PATH)-kernel
 
-# Dolby
-TARGET_PROVIDES_DOLBY_DAX := true
-
 # Inherit from the common OEM chipset makefile.
 $(call inherit-product, device/xiaomi/sm8635-common/common.mk)
-
-# Dolby DAX
-PRODUCT_COPY_FILES += \
-    vendor/xiaomi/uke/proprietary/odm/etc/dolby/dax-default.xml:$(TARGET_COPY_OUT_VENDOR)/etc/dolby/dax-default.xml \
-    vendor/xiaomi/uke/proprietary/odm/etc/dolby/dax-default-spatializer.xml:$(TARGET_COPY_OUT_VENDOR)/etc/dolby/dax-default-spatializer.xml
 
 # Kernel Manager
 PRODUCT_COPY_FILES += \
