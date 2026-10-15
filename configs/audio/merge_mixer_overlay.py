@@ -1,47 +1,151 @@
-import re,sys
+#!/usr/bin/env python3
+"""Pre-merge Xiaomi's mixer path overlays into the common mixer paths file.
+
+Xiaomi's PAL layers mixer_paths_overlay_static.xml and
+mixer_paths_overlay_dynamic.xml over the common file at runtime. The
+source-built PAL (and AOSP audio_route, which rejects duplicate path names)
+doesn't, so the overlays are folded in here instead.
+
+  merge_mixer_overlay.py BASE OUT [--replace STATIC.xml] [--update DYNAMIC.xml]
+
+--replace (static overlay), following the rules in that file's header:
+  * top-level default <ctl>s override the same ctl in BASE (or are added)
+  * a first-level <path> replaces the BASE path of the same name
+  * paths absent from BASE are appended (the header says not to create any)
+
+--update (dynamic overlay): its paths only carry the handful of controls to
+  tweak (the headphones path has volumes and no routing), so replacing a path
+  would drop its routing. Controls are overridden in place inside the existing
+  path, or appended to it. Top-level defaults override as above.
+"""
+import re
+import sys
 import xml.etree.ElementTree as ET
-base_p,ovl_p,out_p=sys.argv[1:4]
-base=open(base_p,encoding='latin-1').read()
-ovl=open(ovl_p,encoding='latin-1').read()
-ET.fromstring(base.encode('latin-1')); ET.fromstring(ovl.encode('latin-1'))
-# top-level blocks: <path name="X"> ... </path> at 4-space indent (non-self-closing)
-path_re=re.compile(r'^    <path name="([^"]+)">\n.*?^    </path>\n',re.S|re.M)
-def paths(t): return [(m.group(1),m.start(),m.end(),m.group(0)) for m in path_re.finditer(t)]
-bp=paths(base); op={}
-for n,s,e,txt in paths(ovl): op[n]=txt
-first_path_pos=bp[0][1] if bp else len(base)
-# --- default ctls: overlay top-level ctls are before its first path
-o_first=min([s for _,s,_,_ in paths(ovl)] or [len(ovl)])
-ctl_re=re.compile(r'^    <ctl ([^>]*?)/>\n',re.M)
+
+PATH_RE = re.compile(r'^    <path name="([^"]+)">\n(.*?)^    </path>\n', re.S | re.M)
+CTL_RE = re.compile(r'^( *)<ctl ([^>]*?)/>\n', re.M)
+
+
+def read(p):
+    t = open(p, encoding='latin-1').read()
+    ET.fromstring(t.encode('latin-1'))
+    return t
+
+
 def key(attrs):
-    a=dict(re.findall(r'(\w+)="([^"]*)"',attrs)); return (a.get('name'),a.get('id'),a.get('index'))
-o_ctls=[(key(m.group(1)),m.group(0)) for m in ctl_re.finditer(ovl,0,o_first)]
-head,rest=base[:first_path_pos],base[first_path_pos:]
-replaced=added=0
-for k,line in o_ctls:
-    found=False
-    def sub(m):
-        global replaced,found
-        if not found and key(m.group(1))==k:
-            found=True; replaced+=1; return line
+    a = dict(re.findall(r'(\w+)="([^"]*)"', attrs))
+    return (a.get('name'), a.get('id'), a.get('index'))
+
+
+def split_head(t):
+    """-> (text before the first <path>, rest). Top-level default ctls live in the head."""
+    m = PATH_RE.search(t)
+    return (t[:m.start()], t[m.start():]) if m else (t, '')
+
+
+def paths_of(t):
+    return [(m.group(1), m.group(0)) for m in PATH_RE.finditer(t)]
+
+
+def merge_ctls(head, ovl_head, stats):
+    for m in CTL_RE.finditer(ovl_head):
+        k, line = key(m.group(2)), m.group(0)
+        done = [False]
+
+        def sub(mm):
+            if not done[0] and key(mm.group(2)) == k:
+                done[0] = True
+                stats['ctl_replaced'] += 1
+                return line
+            return mm.group(0)
+
+        head = CTL_RE.sub(sub, head)
+        if not done[0]:
+            head = head.rstrip('\n') + '\n' + line + '\n'
+            stats['ctl_added'] += 1
+    return head
+
+
+def apply_replace(base, ovl, stats):
+    bh, rest = split_head(base)
+    oh, _ = split_head(ovl)
+    bh = merge_ctls(bh, oh, stats)
+    over = dict(paths_of(ovl))
+    seen = set()
+
+    def rep(m):
+        n = m.group(1)
+        if n in over and n not in seen:
+            seen.add(n)
+            stats['path_replaced'] += 1
+            return over[n]
         return m.group(0)
-    head=ctl_re.sub(sub,head)
-    if not found:
-        head=head.rstrip('\n')+'\n'+line+'\n'; added+=1
-base=head+rest
-# --- first-level path replacement (first occurrence only; duplicates are ignored by audio_route anyway)
-done=set(); missing=[]
-def rep(m):
-    n=m.group(1)
-    if n in op and n not in done:
-        done.add(n); return op[n]
-    return m.group(0)
-base=path_re.sub(rep,base)
-for n in op:
-    if n not in done: missing.append(n)
-if missing:
-    # overlay says never to create new paths; add anyway so nothing is silently dropped
-    base=base.replace('</mixer>',''.join('\n'+op[n] for n in missing)+'</mixer>')
-ET.fromstring(base.encode('latin-1'))
-open(out_p,'w',encoding='latin-1').write(base)
-print("default ctls replaced",replaced,"added",added,"| paths replaced",len(done),"of",len(op),"| appended (absent in base)",missing)
+
+    rest = PATH_RE.sub(rep, rest)
+    missing = [n for n, _ in paths_of(ovl) if n not in seen]
+    if missing:
+        stats['path_appended'] += missing
+        rest = rest.replace('</mixer>', ''.join('\n' + over[n] for n in missing) + '</mixer>')
+    return bh + rest
+
+
+def apply_update(base, ovl, stats):
+    bh, rest = split_head(base)
+    oh, _ = split_head(ovl)
+    bh = merge_ctls(bh, oh, stats)
+    over = dict(paths_of(ovl))
+    seen = set()
+
+    def upd(m):
+        n = m.group(1)
+        if n not in over or n in seen:
+            return m.group(0)
+        seen.add(n)
+        inner = m.group(2)
+        for c in CTL_RE.finditer(PATH_RE.match(over[n]).group(2)):
+            k, line = key(c.group(2)), c.group(0)
+            hit = [False]
+
+            def sub(mm):
+                if not hit[0] and key(mm.group(2)) == k:
+                    hit[0] = True
+                    stats['pathctl_replaced'] += 1
+                    return line
+                return mm.group(0)
+
+            inner = CTL_RE.sub(sub, inner)
+            if not hit[0]:
+                inner += line
+                stats['pathctl_added'] += 1
+        return '    <path name="%s">\n%s    </path>\n' % (n, inner)
+
+    rest = PATH_RE.sub(upd, rest)
+    stats['path_missing'] += [n for n in over if n not in seen]
+    return bh + rest
+
+
+def main(argv):
+    if len(argv) < 3:
+        sys.exit(__doc__)
+    base_p, out_p = argv[:2]
+    opts = argv[2:]
+    base = read(base_p)
+    stats = dict(ctl_replaced=0, ctl_added=0, path_replaced=0, path_appended=[],
+                 pathctl_replaced=0, pathctl_added=0, path_missing=[])
+    i = 0
+    while i < len(opts):
+        mode, p = opts[i], opts[i + 1]
+        if mode == '--replace':
+            base = apply_replace(base, read(p), stats)
+        elif mode == '--update':
+            base = apply_update(base, read(p), stats)
+        else:
+            sys.exit('unknown option ' + mode)
+        i += 2
+    ET.fromstring(base.encode('latin-1'))
+    open(out_p, 'w', encoding='latin-1').write(base)
+    print(stats)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])

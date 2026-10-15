@@ -28,10 +28,11 @@ PRODUCT_COPY_FILES += \
 # The source-built PAL reads its mixer paths and resource manager config from
 # /vendor/etc/audio/sku_<sku>, while Xiaomi ships them in /odm.
 #
-# Xiaomi's PAL also layers mixer_paths_overlay_static.xml over the common mixer
-# paths; the source-built PAL does not, so the tablet's real mic (SoundWire) and
-# speaker routing was never applied and the mics recorded silence. The common
-# file below is that overlay pre-merged (see configs/audio/merge_mixer_overlay.py).
+# Xiaomi's PAL also layers mixer_paths_overlay_static.xml and
+# mixer_paths_overlay_dynamic.xml over the common mixer paths; the source-built
+# PAL does not, so the tablet's real mic (SoundWire) and speaker routing was
+# never applied and the mics recorded silence. The common file below is those
+# overlays pre-merged (see configs/audio/merge_mixer_overlay.py).
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/audio/mixer_paths_cliffs_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/mixer_paths_cliffs_mtp.xml \
     vendor/xiaomi/sm8635-common/proprietary/odm/etc/audio/sku_cliffs/mixer_paths_overlay_dynamic.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/mixer_paths_overlay_dynamic.xml \
