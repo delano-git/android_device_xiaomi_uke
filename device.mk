@@ -18,6 +18,26 @@ PRODUCT_COPY_FILES += \
     vendor/xiaomi/uke/proprietary/odm/etc/dolby/dax-default.xml:$(TARGET_COPY_OUT_VENDOR)/etc/dolby/dax-default.xml \
     vendor/xiaomi/uke/proprietary/odm/etc/dolby/dax-default-spatializer.xml:$(TARGET_COPY_OUT_VENDOR)/etc/dolby/dax-default-spatializer.xml
 
+# The source-built AGM only looks in /vendor/etc/acdbdata/<sound card>, so
+# install the tablet's tuned (Forte) calibration where it expects it instead
+# of the generic Qualcomm MTP reference data.
+PRODUCT_COPY_FILES += \
+    vendor/xiaomi/uke/proprietary/odm/etc/acdbdata/Forte/Forte_acdb_cal.acdb:$(TARGET_COPY_OUT_VENDOR)/etc/acdbdata/cliffs_mtp/MTP_cliffs_acdb_cal.acdb \
+    vendor/xiaomi/uke/proprietary/odm/etc/acdbdata/Forte/Forte_workspaceFileXml.qwsp:$(TARGET_COPY_OUT_VENDOR)/etc/acdbdata/cliffs_mtp/MTP_cliffs_workspaceFileXml.qwsp
+
+# The source-built PAL reads its mixer paths and resource manager config from
+# /vendor/etc/audio/sku_<sku>, while Xiaomi ships them in /odm.
+#
+# Xiaomi's PAL also layers mixer_paths_overlay_static.xml over the common mixer
+# paths; the source-built PAL does not, so the tablet's real mic (SoundWire) and
+# speaker routing was never applied and the mics recorded silence. The common
+# file below is that overlay pre-merged (see configs/audio/merge_mixer_overlay.py).
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/configs/audio/mixer_paths_cliffs_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/mixer_paths_cliffs_mtp.xml \
+    vendor/xiaomi/sm8635-common/proprietary/odm/etc/audio/sku_cliffs/mixer_paths_overlay_dynamic.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/mixer_paths_overlay_dynamic.xml \
+    vendor/xiaomi/uke/proprietary/odm/etc/audio/sku_cliffs/mixer_paths_overlay_static.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/mixer_paths_overlay_static.xml \
+    $(DEVICE_PATH)/configs/audio/resourcemanager_cliffs_mtp.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio/sku_cliffs/resourcemanager_cliffs_mtp.xml
+
 # Kernel Manager
 PRODUCT_COPY_FILES += \
     $(DEVICE_PATH)/configs/ax_kernel_manager.xml:$(TARGET_COPY_OUT_VENDOR)/etc/ax_kernel_manager.xml
