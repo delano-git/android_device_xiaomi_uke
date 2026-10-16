@@ -49,6 +49,12 @@ PRODUCT_COPY_FILES += \
     $(foreach panel,csot tm, \
         vendor/xiaomi/uke/proprietary/odm/firmware/novatek_nt36532_o82_fw_$(panel).bin:$(TARGET_COPY_OUT_RECOVERY)/root/lib/firmware/novatek_nt36532_o82_fw_$(panel).bin)
 
+# ...and then needs the THP daemon's configs and models to report events.
+# Recovery's /odm/firmware is a dangling symlink to /vendor/odm/firmware.
+PRODUCT_COPY_FILES += \
+    $(foreach file,o82_nova_thp_config.ini o82_nova_tm_thp_config.ini film_model.tflite glove_model.tflite palm_check.tflite water_check.tflite, \
+        vendor/xiaomi/uke/proprietary/odm/firmware/$(file):$(TARGET_COPY_OUT_RECOVERY)/root/vendor/odm/firmware/$(file))
+
 # Overlays
 PRODUCT_PACKAGES += \
     FrameworksResUke \
