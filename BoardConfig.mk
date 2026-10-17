@@ -71,6 +71,13 @@ BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(shell cat $(RAMDISK_MODULES_PATH)/
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(shell cat $(RAMDISK_MODULES_PATH)/modules.load.recovery)
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(RAMDISK_MODULES_PATH)/modules.blocklist
 
+# The vendor ramdisk has to carry the first-stage modules for both the normal
+# and the recovery (fastbootd) boot, so install the union of the load lists.
+BOOT_KERNEL_MODULES := $(sort \
+    $(BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD) \
+    $(BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD))
+TARGET_AUTO_COLLECT_KERNEL_MODULE_DEPS := true
+
 # Properties
 TARGET_ODM_PROP += $(DEVICE_PATH)/configs/properties/odm.prop
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/configs/properties/system.prop
